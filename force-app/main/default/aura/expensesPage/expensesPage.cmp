@@ -1,0 +1,128 @@
+<aura:component implements="flexipage:availableForAllPageTypes,lightning:isUrlAddressable"
+    controller="ExpensesPageController">
+
+    <aura:attribute name="userId" type="Id" />
+    <aura:attribute name="office" type="String" />
+    <aura:attribute name="columns" type="List" />
+    <aura:attribute name="expenseCard" type="List" />
+    <aura:attribute name="selectedDate" type="String" />
+    <aura:attribute name="months" type="List" />
+    <aura:attribute name="year" type="Integer" />
+    <aura:attribute name="years" type="List" />
+    <aura:attribute name="isShownNewCardWizard" type="Boolean" />
+    <aura:attribute name="isShownAddBalanceWizard" type="Boolean" />
+    <aura:attribute name="isDataChanged" type="Boolean" />
+    <aura:attribute name="monthlyExpense" type="Object" />
+    <aura:attribute name="draftValues" type="Object" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.init}" />
+    <aura:handler name="change" value="{!v.pageReference}" action="{!c.init}" />
+    <aura:handler name="change" value="{!v.isDataChanged}" action="{!c.rerender}" />
+    <aura:handler name="newExpense" event="c:newExpenseEvent" action="{!c.rerender}" />
+
+    <!-- Header -->
+    <lightning:card>
+        <div class="slds-page-header">
+            <div class="slds-grid">
+                <div class="slds-col slds-has-flexi-truncate">
+                    <lightning:formattedText value="{! 'Expenses ' + v.office}" class="expense-office-style" />
+                    <lightning:formattedText value="Balance: " class="balance-style" />
+                    <lightning:formattedNumber value="{!v.monthlyExpense.Balance}" currencyCode="USD"
+                        minimumFractionDigits="1" maximumFractionDigits="2" class="balance-number-style" />
+                </div>
+                <lightning:button iconName="utility:arrowdown" iconPosition="left" label="Income"
+                    onclick="{!c.addBalance}" />
+                <lightning:button label="New Expense" onclick="{!c.newExpenseCard}" />
+            </div>
+        </div>
+
+        <div class="slds-grid slds-gutters">
+
+            <!-- Navigation -->
+            <div class="slds-col slds-size_1-of-4">
+                <span>
+                    <table style="margin-left: 5%;border-right: medium solid #eeeeee;">
+                        <tr>
+                            <th style="width:46%; color: #a7a7a7; padding-left: 5%">
+                                MONTHS
+                            </th>
+                            <th style="width:32%; color: #a7a7a7">
+                                Amount
+                            </th>
+                            <th style="width:32%; color: #a7a7a7">
+                                Income
+                            </th>
+                        </tr>
+                        <aura:iteration items="{!v.monthlyExpense.monthlyExpenseList}" var="item">
+                            <tr data-menu-item-id="{!item.month}" style="height:40px" onclick="{!c.showExpenseCard}"
+                                data-record="{!item.oppy.MonthDate}">
+                                <td style="padding-left: 10%">
+                                    <a href="#0">
+                                        <lightning:formattedDateTime value="{!item.oppy.MonthDate}" month="long">
+                                        </lightning:formattedDateTime>
+                                    </a>
+                                </td>
+                                <td>
+                                    <lightning:badge label="{!item.oppy.SpentAmount}" />
+                                </td>
+                                <td>
+                                    <lightning:badge label="{!item.oppy.Balance}" />
+                                </td>
+                            </tr>
+                        </aura:iteration>
+                        <tr style="background-color: #d2d2d2; font-weight: bold">
+                            <td style="font-weight: bold; padding-left: 12%">
+                                Total:
+                            </td>
+                            <td>
+                                <lightning:formattedNumber value="{!v.monthlyExpense.totalAmount}"
+                                    maximumFractionDigits="1" />
+                            </td>
+                            <td class="column">
+                                <lightning:formattedNumber value="{!v.monthlyExpense.totalIncome}"
+                                    maximumFractionDigits="1" />
+                            </td>
+                        </tr>
+                    </table>
+                    <p style="padding-left: 5%">Years</p>
+                    <lightning:buttonGroup class="padding">
+                        <aura:iteration items="{!v.years}" var="item">
+                            <lightning:button label="{!item}" onclick="{!c.yearChanged}" />
+                        </aura:iteration>
+                    </lightning:buttonGroup>
+                </span>
+            </div>
+
+            <!-- Body -->
+            <div class="slds-col slds-size_3-of-4">
+                <span>
+                    <lightning:accordion>
+                        <aura:iteration items="{!v.expenseCard}" var="card">
+                            <lightning:accordionSection name="{!card.cardDateUnique}" label="{!card.cardDateUnique}">
+                                <lightning:datatable keyField="Id" data="{!card.expenseCardList}" columns="{!v.columns}"
+                                    onsave="{!c.handleUpdate}" onrowaction="{!c.handleDelete}"
+                                    draftValues="{!v.draftValues}" hideCheckboxColumn="true">
+                                </lightning:datatable>
+                                <dl class="slds-dl_horizontal slds-p-left_xx-large">
+                                    <dt class="slds-dl_horizontal__label slds-text-heading_small">
+                                        Total:
+                                    </dt>
+                                    <dd class="slds-dl_horizontal__detail slds-p-left_xx-large slds-text-heading_small">
+                                        {!card.totalSum}</dd>
+                                </dl>
+                            </lightning:accordionSection>
+                        </aura:iteration>
+                    </lightning:accordion>
+                </span>
+            </div>
+        </div>
+    </lightning:card>
+
+    <aura:if isTrue="{!v.isShownNewCardWizard}">
+        <c:newExpense userId="{#v.userId}" isShownNewCardWizard="{!v.isShownNewCardWizard}"/>
+    </aura:if>
+    <aura:if isTrue="{!v.isShownAddBalanceWizard}">
+        <c:newIncome userId="{#v.userId}" isShownAddBalanceWizard="{!v.isShownAddBalanceWizard}" months="{!v.months}" years="{!v.years}"/>
+    </aura:if>
+
+</aura:component>

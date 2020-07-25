@@ -1,0 +1,1 @@
+<aura:event type="COMPONENT" description="Fire rerender after saving new expense card or new income" />

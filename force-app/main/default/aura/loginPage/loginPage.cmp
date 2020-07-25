@@ -1,0 +1,28 @@
+<aura:component implements="flexipage:availableForAllPageTypes,force:appHostable" controller="LoginController">
+    <aura:attribute name="email" type="String" />
+    <aura:attribute name="password" type="String" />
+    <aura:attribute name="isErrorHidden" type="Boolean" default="true"/>
+    <aura:attribute name="errorMessage" type="String"/>
+
+    <lightning:navigation aura:id="navService" />
+
+        <lightning:card class="slds-modal--form">
+        <div class="slds-align_absolute-center">
+            <img src="{!$Resource.Logo}" height="100" width="100" />
+        </div>
+        <div class="slds-align_absolute-center" hidden="{!v.isErrorHidden}">
+            <lightning:formattedText value="{!v.errorMessage}" class="slds-theme--error"/>
+        </div>
+        <div>
+            <lightning:input type="email" name="email" value="{!v.email}" label="Email" required="true" />
+        </div>
+        <div>
+            <lightning:input type="password" name="password" value="{!v.password}" label="Password" required="true" />
+        </div>
+        <div style="text-align: center">
+            <br/>
+            <lightning:button variant="success" label="Login" onclick="{!c.onclick}" />
+        </div>
+    </lightning:card>
+
+</aura:component>

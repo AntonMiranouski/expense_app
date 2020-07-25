@@ -1,0 +1,92 @@
+<aura:component implements="flexipage:availableForAllPageTypes,lightning:isUrlAddressable"
+    controller="AdminPageController">
+
+    <lightning:navigation aura:id="adminNavService" />
+
+    <aura:attribute name="monthlyExpense" type="Object" />
+    <aura:attribute name="year" type="Integer" />
+    <aura:attribute name="years" type="List" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.init}" />
+
+    <div>
+        <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+            <thead>
+                <tr class="slds-line-height_reset">
+                    <th colspan="2" style="background-color: #f4fff9; vertical-align: center; text-align: center; font-size: large; font-weight: bold;">
+                        <lightning:combobox name="year" label="" options="{!v.years}" onchange="{!c.yearChanged}"
+                            value="{!'Regional Expenses ' + v.year}" placeholder="{!'Regional Expense ' + v.year}" />
+                    </th>
+                    <aura:iteration items="{!v.monthlyExpense.officeList}" var="monthly">
+                        <th style="background-color: #f4fff9; color: #49a9cb; vertical-align: center; text-align: center; font-size: large; font-weight: bold;"
+                            onclick="{!c.navigateToOffice}" data-menu-item-id="{!monthly.officeName}">
+                            {!monthly.officeName}
+                        </th>
+                    </aura:iteration>
+                    <th rowspan="3" class="" scope="col"
+                        style="background: #fbf539; vertical-align: bottom; color: red">
+                        <div class="slds-truncate slds-text-heading_medium" title="Confidence">Summ:</div>
+                    </th>
+                </tr>
+                <tr>
+                    <th rowspan="2" scope="row" style="background: #cfd7d8; vertical-align: bottom">
+                        <div class="slds-truncate slds-text-heading_medium">
+                            Month
+                        </div>
+                    </th>
+                    <th style="background: #8690e4; color: red">
+                        <div class="slds-text-heading_large"> Balance now </div>
+                    </th>
+                    <aura:iteration items="{!v.monthlyExpense.officeList}" var="monthly">
+                        <td class="" scope="col" key="{!monthly.balanceNow}"
+                            style="background: #8690e4; font-size: 25px; text-align: center">
+                            <div class="slds-truncate" title="Account Name">{!monthly.balanceNow}</div>
+                        </td>
+                    </aura:iteration>
+
+                </tr>
+                <tr>
+                    <th style="background: #efe7af; color: red">
+                        <div class="slds-text-heading_medium">Monthly average</div>
+                    </th>
+                    <aura:iteration items="{!v.monthlyExpense.officeList}" var="monthly">
+                        <td class="" scope="col" key="{!monthly.monthlyAverage}"
+                            style="background: #efe7af; text-align: center">
+                            <div class="slds-truncate">{!monthly.monthlyAverage}</div>
+                        </td>
+                    </aura:iteration>
+                </tr>
+            </thead>
+            <tbody>
+                <aura:iteration items="{!v.monthlyExpense.dataList}" var="data">
+                    <tr key="{!data}">
+                        <th colspan="2" key="{!data}">
+                            {!data.month}
+                        </th>
+                        <aura:iteration items="{!data.monthAmount}" var="office">
+                            <th key="{!office}">
+                                {!office}
+                            </th>
+                        </aura:iteration>
+                    </tr>
+                </aura:iteration>
+            </tbody>
+            <tfoot>
+                <tr style="background: #9c9999">
+                    <th colspan="2">
+                        Total:
+                    </th>
+                    <aura:iteration items="{!v.monthlyExpense.officeList}" var="monthly">
+                        <td scope="col" key="{!monthly.totalAmount}" style="text-align: center">
+                            <div class="slds-truncate" title="Account Name">{!monthly.totalAmount}</div>
+                        </td>
+                    </aura:iteration>
+                    <td style="text-align: center">
+                        {!v.monthlyExpense.summ}
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+</aura:component>

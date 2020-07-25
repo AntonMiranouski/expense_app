@@ -1,0 +1,45 @@
+<aura:component controller="ExpensesPageController">
+    <aura:attribute name="userId" type="Id" />
+    <aura:attribute name="selectedDate" type="String" />
+    <aura:attribute name="isShownAddBalanceWizard" type="Boolean" />
+    <aura:attribute name="amount" type="Integer" />
+    <aura:attribute name="months" type="List" />
+    <aura:attribute name="years" type="List" />
+
+
+    <aura:registerEvent name="newExpense" type="c:newExpenseEvent" />
+
+    <div style="height: 640px;">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+            aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon iconName="utility:close" variant="bare" onclick="{!c.hide}"
+                        alternativeText="Close" class="slds-modal__close" />
+                    <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Top Up Balance</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <lightning:input label="Amount" required="true" name="amount" placeholder="Amount..." type="number"
+                        value="{!v.amount}" min="0" formatter="currency" step="0.01" />
+                </div>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-2">
+                    <lightning:select aura:id="selectedMonth" label="Month" required="true">
+                        <aura:iteration items="{!v.months}" var="month">
+                            <option text="{!month}" value="{!month}"></option>
+                        </aura:iteration>
+                    </lightning:select>
+                    <lightning:select aura:id="selectedYear" label="Year" required="true">
+                        <aura:iteration items="{!v.years}" var="year">
+                            <option text="{!year}" value="{!year}"></option>
+                        </aura:iteration>
+                    </lightning:select>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning:button label="Cancel" title="Hide new expense card window" onclick="{!c.hide}" />
+                    <lightning:button label="Add" variant="brand" title="Top Up Balance" onclick="{!c.add}" />
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </div>
+</aura:component>
