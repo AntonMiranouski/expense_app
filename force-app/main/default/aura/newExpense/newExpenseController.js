@@ -5,12 +5,14 @@
         const amount = component.get("v.amount");
         const cardDate = component.get("v.cardDate");
         const description = component.get("v.description");
+        const office = component.get("v.office");
        
         action.setParams({
             conId: conId,
             amount: amount,
             cardDate: cardDate,
-            description: description
+            description: description,
+            office: office
         });
         
         action.setCallback(this, function (response) {

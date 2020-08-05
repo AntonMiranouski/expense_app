@@ -52,7 +52,7 @@ public class ExpensesPageController {
         Contact con = [SELECT Admin__c FROM Contact WHERE Id =: conId];
         
         /* If contact Id undefined get data for all office (Admin) */
-        if (!con.Admin__c) {
+        if (!con.Admin__c || office == null) {
             List<MonthlyExpense__c> expenseList = [
                 SELECT Balance__c, MonthDate__c, SpentAmount__c, Reminder__c 
                 FROM MonthlyExpense__c WHERE Keeper__c =:conId 
@@ -150,7 +150,7 @@ public class ExpensesPageController {
         List<ExpenseCard__c> expenseCards = new List<ExpenseCard__c>();
         Contact con = [SELECT Admin__c FROM Contact WHERE Id =: conId];
 
-        /* If contact Id undefined get data for all office (Admin) */
+        /* If contact is Admin get data for all office */
         if (!con.Admin__c) {
             for(AggregateResult ar : [
                 SELECT CardDate__c FROM ExpenseCard__c 
@@ -207,8 +207,15 @@ public class ExpensesPageController {
     }
     
     @AuraEnabled
-    public static void saveExpenseCard(String conId, Integer amount, Date cardDate, String description){
+    public static void saveExpenseCard(String conId, Integer amount, Date cardDate, String description, String office){
         try {
+            Contact con = [SELECT Admin__c, Office__c FROM Contact WHERE Id =: conId];
+            if (con.Admin__c && con.Office__c != office && office != null) {
+                String lastNameGen = ('AdditionalContact' + office).deleteWhitespace();
+                Contact additCon = [SELECT Id FROM Contact WHERE LastName =: lastNameGen];
+                conId = additCon.Id;
+            }
+
             ExpenseCard__c card = new ExpenseCard__c(
                 CardKeeper__c = conId, Amount__c = amount, CardDate__c = cardDate, Description__c = description
             );
@@ -229,8 +236,15 @@ public class ExpensesPageController {
     }
     
     @AuraEnabled
-    public static void addBalance(String selectedDate, String conId, Integer amount){
+    public static void addBalance(String selectedDate, String conId, Integer amount, String office){
         try {
+            Contact con = [SELECT Admin__c, Office__c FROM Contact WHERE Id =: conId];
+            if (con.Admin__c && con.Office__c != office) {
+                String lastNameGen = ('AdditionalContact' + office).deleteWhitespace();
+                Contact additCon = [SELECT Id FROM Contact WHERE LastName =: lastNameGen];
+                conId = additCon.Id;
+            }
+
             Date month = Date.valueOf(selectedDate);
             List<MonthlyExpense__c> expenses = [
                 SELECT Balance__c FROM MonthlyExpense__c WHERE MonthDate__c =: month AND Keeper__c =: conId

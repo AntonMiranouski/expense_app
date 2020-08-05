@@ -119,10 +119,10 @@
     </lightning:card>
 
     <aura:if isTrue="{!v.isShownNewCardWizard}">
-        <c:newExpense userId="{#v.userId}" isShownNewCardWizard="{!v.isShownNewCardWizard}"/>
+        <c:newExpense userId="{#v.userId}" isShownNewCardWizard="{!v.isShownNewCardWizard}" office="{!v.office}"/>
     </aura:if>
     <aura:if isTrue="{!v.isShownAddBalanceWizard}">
-        <c:newIncome userId="{#v.userId}" isShownAddBalanceWizard="{!v.isShownAddBalanceWizard}" months="{!v.months}" years="{!v.years}"/>
+        <c:newIncome userId="{#v.userId}" isShownAddBalanceWizard="{!v.isShownAddBalanceWizard}" months="{!v.months}" years="{!v.years}" office="{!v.office}"/>
     </aura:if>
 
 </aura:component>

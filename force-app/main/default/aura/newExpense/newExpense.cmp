@@ -1,6 +1,7 @@
 <aura:component controller="ExpensesPageController">
     <aura:attribute name="userId" type="Id" />
     <aura:attribute name="isShownNewCardWizard" type="Boolean" />
+    <aura:attribute name="office" type="String" />
 
     <aura:attribute name="amount" type="Decimal" />
     <aura:attribute name="cardDate" type="Date" />

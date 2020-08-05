@@ -5,6 +5,7 @@
     <aura:attribute name="amount" type="Integer" />
     <aura:attribute name="months" type="List" />
     <aura:attribute name="years" type="List" />
+    <aura:attribute name="office" type="String" />
 
 
     <aura:registerEvent name="newExpense" type="c:newExpenseEvent" />
@@ -20,7 +21,7 @@
                 </header>
                 <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
                     <lightning:input label="Amount" required="true" name="amount" placeholder="Amount..." type="number"
-                        value="{!v.amount}" min="0" formatter="currency" step="0.01" />
+                        value="{!v.amount}" formatter="currency" step="0.01" />
                 </div>
                 <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-2">
                     <lightning:select aura:id="selectedMonth" label="Month" required="true">

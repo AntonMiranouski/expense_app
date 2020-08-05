@@ -3,6 +3,7 @@
         const action = component.get("c.addBalance");
         const conId = component.get("v.userId");
         const amount = component.get("v.amount");
+        const office = component.get("v.office");
 
         const months = {
             'January' : '01',
@@ -24,7 +25,8 @@
         action.setParams({
             selectedDate: selectedDate,
             conId: conId,
-            amount: amount
+            amount: amount,
+            office: office
         });
 
         action.setCallback(this, function (response) {

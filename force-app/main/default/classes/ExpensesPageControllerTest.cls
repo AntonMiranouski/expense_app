@@ -32,9 +32,9 @@ private class ExpensesPageControllerTest {
         );
         insert card3;
         
-        ExpensesPageController.saveExpenseCard(c1.Id, 50, Date.newInstance(2020, 1, 10), 'Test');
+        ExpensesPageController.saveExpenseCard(c1.Id, 50, Date.newInstance(2020, 1, 10), 'Test', null);
         ExpensesPageController.deleteExpenseCard(card3.Id);
-        ExpensesPageController.addBalance('2020-01-01', c1.Id, 80);
+        ExpensesPageController.addBalance('2020-01-01', c1.Id, 80, null);
         ExpensesPageController.updateExpenseCard(card1.Id, 'Changed', null);
         
         ExpensesPageController.MonthlyExpense me = 
